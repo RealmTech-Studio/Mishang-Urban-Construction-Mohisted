@@ -533,7 +533,7 @@ public class Mishanguc implements ModInitializer {
     MishangucBlocks.init();
     MishangucItems.init();
     MishangucBlockEntities.init();
-    final GameRules.Key<EnumRule<MishangucRules.ToolAccess>> ignore = MishangucRules.CARRYING_TOOL_ACCESS;
+    //final GameRules.Key<EnumRule<MishangucRules.ToolAccess>> ignore = MishangucRules.CARRYING_TOOL_ACCESS;
     SpecialDrawableTypes.init();
     MishangucItemGroups.init();
 
