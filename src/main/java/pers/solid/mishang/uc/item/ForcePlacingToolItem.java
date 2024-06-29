@@ -257,10 +257,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   private static boolean hasAccess(PlayerEntity player, World world, boolean warn) {
     if (world.isClient) {
       return MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.get().hasAccess(player);
-    } else {
-      final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
-      return toolAccess.hasAccess(player, warn);
-    }
+    } //else {
+      //final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
+      //return toolAccess.hasAccess(player, warn);
+   // }
   }
 
   @Environment(EnvType.CLIENT)
