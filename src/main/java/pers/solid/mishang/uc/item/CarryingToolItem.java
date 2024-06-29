@@ -268,9 +268,9 @@ public class CarryingToolItem extends BlockToolItem
   private boolean hasAccess(PlayerEntity player, World world, boolean warn) {
     if (world.isClient) {
       return MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.get().hasAccess(player);
-    } else {
-      final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.CARRYING_TOOL_ACCESS).get();
-      return toolAccess.hasAccess(player, warn);
+    } //else {
+      //final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.CARRYING_TOOL_ACCESS).get();
+      //return toolAccess.hasAccess(player, warn);
     }
   }
 
