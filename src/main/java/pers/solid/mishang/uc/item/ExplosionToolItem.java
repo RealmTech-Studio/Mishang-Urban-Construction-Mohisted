@@ -55,9 +55,9 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     if (world.isClient) {
       return TypedActionResult.pass(stack);
     }
-    if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
-      return TypedActionResult.pass(super.use(world, user, hand).getValue());
-    }
+    //if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
+   //   return TypedActionResult.pass(super.use(world, user, hand).getValue());
+   // }
     final Vec3d pos = raycast.getPos();
     final GameRules.BooleanRule booleanRule = world.getGameRules().get(GameRules.DO_TILE_DROPS);
     final boolean backup = booleanRule.get();
@@ -156,9 +156,9 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final ServerWorld world = pointer.getWorld();
-    if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(null)) {
-      return stack;
-    }
+    //if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(null)) {
+    //  return stack;
+   // }
     final BlockPos basePos = pointer.getPos();
     final Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
     for (int i = 1; i < 33; i++) {
