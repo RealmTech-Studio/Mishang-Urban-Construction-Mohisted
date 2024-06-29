@@ -26,6 +26,9 @@ repositories {
     mavenLocal()
     maven { url "https://maven.terraformersmc.com/releases/" }
     maven { url 'https://jitpack.io' }
+    maven {
+    url 'https://raw.githubusercontent.com/SolidBlock-cn/mvn-repo/main'
+    }
 }
 
 
