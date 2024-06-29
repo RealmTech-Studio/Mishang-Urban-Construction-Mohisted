@@ -274,14 +274,14 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
     final Vec3d cameraPos = context.camera().getPos();
     if (hitResult instanceof EntityHitResult entityHitResult) {
-      final Entity entity = entityHitResult.getEntity();
-      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
+        final Entity entity = entityHitResult.getEntity();
+        WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
     }
 }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
+@Environment(EnvType.CLIENT)
+@Override
+public ModelJsonBuilder getItemModel() {
     return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
-  }
 }
+
