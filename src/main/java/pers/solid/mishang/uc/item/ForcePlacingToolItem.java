@@ -261,7 +261,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       //final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
       //return toolAccess.hasAccess(player, warn);
    // }
-  }
+ // }
 
   @Environment(EnvType.CLIENT)
   @Override
