@@ -231,7 +231,7 @@ world.removeBlockEntity(pos);
       return false; // 临时修复，您可以取消注释并修改此部分以匹配您的实现。
     }
   }
- @Environment(EnvType.CLIENT)
+  @Environment(EnvType.CLIENT)
   @Override
   public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
     // 只在使用主手持有此物品时进行渲染。
