@@ -29,13 +29,16 @@ import pers.solid.mishang.uc.util.TextBridge;
  * @see GameRules
  */
 @ApiStatus.AvailableSince("1.0.0")
-public final class MishangucRules {
+//public final class MishangucRules {
 
+  // 删除或注释掉以下代码以移除游戏规则
+  /*
   public static final GameRules.Key<EnumRule<ToolAccess>> FORCE_PLACING_TOOL_ACCESS = register("force_placing_tool_access", GameRuleFactory.createEnumRule(ToolAccess.CREATIVE_ONLY, (server, rule) -> sync(server, rule, 0)));
 
   public static final GameRules.Key<EnumRule<ToolAccess>> CARRYING_TOOL_ACCESS = register("carrying_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL, (server, rule) -> sync(server, rule, 1)));
 
   public static final GameRules.Key<EnumRule<ToolAccess>> EXPLOSION_TOOL_ACCESS = register("explosion_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL));
+  */
 
   private static void sync(MinecraftServer server, GameRules.Rule<?> rule, int type) {
     for (ServerPlayerEntity serverPlayerEntity : server.getPlayerManager().getPlayerList()) {
@@ -92,7 +95,7 @@ public final class MishangucRules {
     }, CREATIVE_OP_ONLY {
       @Override
       public boolean hasAccess(@Nullable PlayerEntity player) {
-        return player != null && player.isCreative() && player.hasPermissionLevel(2);
+        return player != null && player isCreative() && player hasPermissionLevel(2);
       }
     };
     private final String name;
