@@ -265,15 +265,15 @@ public class CarryingToolItem extends BlockToolItem
     }
   }
 
-  private boolean hasAccess(PlayerEntity player, World world, boolean warn) {
+ private boolean hasAccess(PlayerEntity player, World world, boolean warn) {
     if (world.isClient) {
-      return MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.get().hasAccess(player);
-    } //else {
-      //final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.CARRYING_TOOL_ACCESS).get();
-      //return toolAccess.hasAccess(player, warn);
+        return MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.get().hasAccess(player);
+    } else {
+        // final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.CARRYING_TOOL_ACCESS).get();
+        // return toolAccess.hasAccess(player, warn);
+        return true; // 或者根据你的逻辑返回一个默认值
     }
-  }
-
+}
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!hasAccess(player, world, true))
