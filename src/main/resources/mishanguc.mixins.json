@@ -1,0 +1,35 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "pers.solid.mishang.uc.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AbstractBlockStateMixin",
+    "AreaHelperMixin",
+    "BeaconBlockEntityAccessor",
+    "BeaconBlockEntityAccessor$BeamSegmentAccessor",
+    "BeaconBlockEntityMixin",
+    "BucketItemAccessor",
+    "ChunkHolderAccessor",
+    "FenceBlockMixin",
+    "ItemUsageContextInvoker",
+    "NbtCompoundAccessor",
+    "NetherPortalBlockMixin",
+    "PaneBlockMixin",
+    "PlayerInventoryMixin",
+    "PointOfInterestTypesMixin",
+    "ServerChunkManagerAccessor",
+    "WallBlockMixin",
+    "WorldChunkMixin"
+  ],
+  "client": [
+    "BetterClientPlayerInteractionManagerMixin",
+    "GameRendererMixin",
+    "ScreenMixin",
+    "TextRendererAccessor",
+    "WorldRendererInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

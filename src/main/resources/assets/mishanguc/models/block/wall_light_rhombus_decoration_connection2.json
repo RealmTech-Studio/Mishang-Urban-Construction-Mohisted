@@ -1,0 +1,31 @@
+{
+  "parent": "mishanguc:block/wall_light",
+  "elements": [
+    {
+      "from": [10, 5, 0],
+      "to": [16, 7, 1],
+      "faces": {
+        "north": {"texture": "#light", "cullface": "north"},
+        "east": {"texture": "#light", "cullface": "east"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light"}
+      },
+      "shade": false
+    },
+    {
+      "from": [10, 9, 0],
+      "to": [16, 11, 1],
+      "faces": {
+        "north": {"texture": "#light", "cullface": "north"},
+        "east": {"texture": "#light", "cullface": "east"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light"}
+      },
+      "shade": false
+    }
+  ]
+}

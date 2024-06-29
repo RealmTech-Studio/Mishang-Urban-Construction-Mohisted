@@ -1,0 +1,26 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "top": "#texture",
+    "bottom": "#texture",
+    "particle": "#texture"
+  },
+  "elements": [
+    {
+      "from": [7.5, 12, 7.5],
+      "to": [8.5, 13, 8.5],
+      "faces": {
+        "up": {"texture": "#top"},
+        "down": {"texture": "#top"}
+      }
+    },
+    {
+      "from": [7.5, 0, 7.5],
+      "to": [8.5, 1, 8.5],
+      "faces": {
+        "up": {"texture": "#bottom"},
+        "down": {"texture": "#bottom", "cullface": "down"}
+      }
+    }
+  ]
+}
