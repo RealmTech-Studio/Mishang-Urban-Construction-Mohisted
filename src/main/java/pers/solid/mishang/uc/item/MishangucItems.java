@@ -38,12 +38,7 @@ public final class MishangucItems {
   public static final SlabToolItem SLAB_TOOL =
       new SlabToolItem(new FabricItemSettings().maxDamage(1024));
 
-  public static final ForcePlacingToolItem FORCE_PLACING_TOOL =
-      new ForcePlacingToolItem(new FabricItemSettings().maxCount(1), null);
-
-  public static final ForcePlacingToolItem FLUID_FORCE_PLACING_TOOL =
-      new ForcePlacingToolItem(new FabricItemSettings().maxCount(1), true);
-
+ 
   public static final BlockStateToolItem BLOCK_STATE_TOOL =
       new BlockStateToolItem(new FabricItemSettings().maxCount(1), null);
 
