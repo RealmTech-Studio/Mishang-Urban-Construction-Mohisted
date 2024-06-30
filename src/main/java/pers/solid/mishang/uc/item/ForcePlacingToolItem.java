@@ -264,15 +264,18 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
  // }
 
   @Environment(EnvType.CLIENT)
-  @Override
-  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
+@Override
+public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
     // 只在使用主手持有此物品时进行渲染。
     if (hand != Hand.MAIN_HAND || !hasAccess(player, context.world(), false)) return;
+    
     final MatrixStack matrices = context.matrixStack();
     final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return;
+    
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
     final Vec3d cameraPos = context.camera().getPos();
+    
     if (hitResult instanceof EntityHitResult entityHitResult) {
         final Entity entity = entityHitResult.getEntity();
         WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
