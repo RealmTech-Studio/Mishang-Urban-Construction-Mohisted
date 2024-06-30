@@ -81,10 +81,7 @@ public class ColumnBuildingTool extends Item {
     return ActionResult.SUCCESS;
   }
 
-  public int getLength(ItemStack stack) {
-    final NbtCompound nbt = stack.getOrCreateNbt();
-    return nbt.contains("Length", NbtElement.NUMBER_TYPE) ? MathHelper.clamp(1, nbt.getInt("Length"), 64) : 8;
-  }
+ 
 
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
