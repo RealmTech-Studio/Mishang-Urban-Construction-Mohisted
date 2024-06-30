@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.mishang.uc.MishangucRules;
+
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
