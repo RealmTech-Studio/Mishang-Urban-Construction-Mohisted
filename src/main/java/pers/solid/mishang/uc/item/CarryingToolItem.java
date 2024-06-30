@@ -157,14 +157,7 @@ public class CarryingToolItem extends BlockToolItem implements InteractsWithEnti
     return ActionResult.SUCCESS;
   }
 
-  @ApiStatus.AvailableSince("1.0.0")
-  private static boolean hasAccess(PlayerEntity player, World world, boolean warn) {
-    if (world.isClient) {
-      return MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.get().hasAccess(player);
-    } else {
-      return true; // Placeholder, replace with actual access check.
-    }
-  }
+
 
   @Environment(EnvType.CLIENT)
   @Override
