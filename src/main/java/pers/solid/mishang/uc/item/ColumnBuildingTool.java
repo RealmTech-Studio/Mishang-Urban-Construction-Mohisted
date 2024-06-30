@@ -159,8 +159,5 @@ public class ColumnBuildingTool extends Item {
         }
     }
 
-    public ModelJsonBuilder getItemModel() {
-        // your model building logic here
-        return new ModelJsonBuilder();
-    }
+
 }
