@@ -82,7 +82,7 @@ public class ColumnBuildingTool extends Item {
   }
 
  
-
+/*
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     @Nullable BlockBox lastPlacedBox = null;
@@ -120,6 +120,7 @@ public class ColumnBuildingTool extends Item {
     }
     return ActionResult.PASS;
   }
+      */
    
     public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, MatrixStack matrices, VertexConsumerProvider consumers, BlockPos pos, VoxelShape shape) {
         // your render logic
