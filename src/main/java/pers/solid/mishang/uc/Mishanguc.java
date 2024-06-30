@@ -24,7 +24,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -542,7 +542,7 @@ public class Mishanguc implements ModInitializer {
     registerFlammableAndFuels();
 
     // 玩家踩在道路方块上时，予以加速。
-    ColumnBuildingTool.registerTempMemoryEvents();
+    //ColumnBuildingTool.registerTempMemoryEvents();
 
     registerCommands();
     registerColoredBlocks();
