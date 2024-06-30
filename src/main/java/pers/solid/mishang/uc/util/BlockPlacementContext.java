@@ -163,12 +163,6 @@ public class BlockPlacementContext {
         stackInHand1 = stackInHand0;
         hand = hand1;
         break;
-      } else if (stackInHand0.getItem() instanceof NULL) {
-        placementContext1 = new ItemPlacementContext(player, hand1, stackInHand0, hit);
-        //stateToPlace1 = CarryingToolItem.getHoldingBlockState(stackInHand0, world);
-        stackInHand1 = stackInHand0;
-        hand = hand1;
-        break;
       } else if (stackInHand0.getItem() instanceof FlintAndSteelItem) {
         stateToPlace1 = Blocks.FIRE.getDefaultState();
       } else if (stackInHand0.getItem() instanceof BucketItem bucketItem) {
