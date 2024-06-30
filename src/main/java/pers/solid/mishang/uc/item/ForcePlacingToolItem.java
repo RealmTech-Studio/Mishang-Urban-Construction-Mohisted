@@ -284,4 +284,3 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 public ModelJsonBuilder getItemModel() {
     return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
 }
-
