@@ -69,12 +69,12 @@ public class ColumnBuildingTool extends Item {
               world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
             }
           }
-          /*if (!soundPlayed) blockPlacementContext.playSound();
+          if (!soundPlayed) blockPlacementContext.playSound();
           soundPlayed = true;
         } else {
           posToPlace.move(side, -1);
           break;
-        }*/
+        }
         posToPlace.move(side);
       } // end for
     }
@@ -83,7 +83,7 @@ public class ColumnBuildingTool extends Item {
   }
 
  
-/*
+
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     @Nullable BlockBox lastPlacedBox = null;
@@ -151,7 +151,7 @@ public class ColumnBuildingTool extends Item {
         }
     }
 
-      */
+      
   }
 }
 */
