@@ -20,7 +20,6 @@
     "PointOfInterestTypesMixin",
     "ServerChunkManagerAccessor",
     "WallBlockMixin",
-    "WorldChunkMixin"
   ],
   "client": [
     "BetterClientPlayerInteractionManagerMixin",
