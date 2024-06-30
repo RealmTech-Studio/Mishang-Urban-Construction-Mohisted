@@ -120,8 +120,7 @@ public class ColumnBuildingTool extends Item {
     }
     return ActionResult.PASS;
   }
-      */
-   
+
     public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, MatrixStack matrices, VertexConsumerProvider consumers, BlockPos pos, VoxelShape shape) {
         // your render logic
         return true;
@@ -151,5 +150,6 @@ public class ColumnBuildingTool extends Item {
         }
     }
 
-
+      */
+   
 }
