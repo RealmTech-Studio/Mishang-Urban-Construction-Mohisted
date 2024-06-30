@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.model.ModelJsonBuilder;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -41,20 +42,94 @@ public class ColumnBuildingTool extends Item {
         super(settings);
     }
 
-    public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
-        // your block placement logic
-        return ActionResult.success(world.isClient);
+      @Override
+  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+    if (!player.isCreative()) {
+      // 仅限创造模式玩家使用。
+      return ActionResult.PASS;
     }
-
-    public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-        // your block attack logic
-        return ActionResult.success(world.isClient);
+    final Direction side = blockHitResult.getSide();
+    final BlockPos originBlockPos = blockHitResult.getBlockPos();
+    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, originBlockPos, player, stack, blockHitResult, fluidIncluded);
+    final int length = this.getLength(stack);
+    boolean soundPlayed = false;
+    final BlockPos.Mutable posToPlace = new BlockPos.Mutable().set(blockPlacementContext.posToPlace);
+    if (blockPlacementContext.canPlace()) {
+      for (int i = 0; i < length; i++) {
+        if (world.getBlockState(posToPlace).canReplace(blockPlacementContext.placementContext)) {
+          if (!world.isClient) {
+            world.setBlockState(posToPlace, blockPlacementContext.stateToPlace, 0b1011);
+            BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
+            if (blockPlacementContext.stackInHand != null) {
+              BlockItem.writeNbtToBlockEntity(world, player, posToPlace, blockPlacementContext.stackInHand);
+            } else if (blockPlacementContext.hitEntity != null && entityToPlace != null) {
+              entityToPlace.readNbt(blockPlacementContext.hitEntity.createNbt());
+              entityToPlace.markDirty();
+              world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
+            }
+          }
+          if (!soundPlayed) blockPlacementContext.playSound();
+          soundPlayed = true;
+        } else {
+          posToPlace.move(side, -1);
+          break;
+        }
+        posToPlace.move(side);
+      } // end for
     }
-
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        // your tooltip logic
+    if (soundPlayed) {
+      if (!world.isClient) {
+        tempMemory.put(((ServerPlayerEntity) player), Triple.of(((ServerWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable())));
+      } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        clientTempMemory = Triple.of(((ClientWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable()));
+      }
     }
+    return ActionResult.SUCCESS;
+  }
 
+  public int getLength(ItemStack stack) {
+    final NbtCompound nbt = stack.getOrCreateNbt();
+    return nbt.contains("Length", NbtElement.NUMBER_TYPE) ? MathHelper.clamp(1, nbt.getInt("Length"), 64) : 8;
+  }
+
+  @Override
+  public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    @Nullable BlockBox lastPlacedBox = null;
+    @Nullable Block lastPlacedBlock = null;
+
+    // 检查是否存在上次记录的区域。如果有，且点击的方块在该区域内，则直接删除这个区域的方块。
+    // 注意：只要点击了，即使点击的位置不在该区域内，也会清除有关的记录。
+    if (!world.isClient) {
+      final Triple<ServerWorld, Block, BlockBox> pair = tempMemory.get(((ServerPlayerEntity) player));
+      if (pair != null && pair.getLeft().equals(world) && pair.getRight().contains(pos)) {
+        lastPlacedBox = pair.getRight();
+        lastPlacedBlock = pair.getMiddle();
+      }
+      tempMemory.remove(player);
+    } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+      if (clientTempMemory != null && clientTempMemory.getLeft().equals(world) && clientTempMemory.getRight().contains(pos)) {
+        lastPlacedBox = clientTempMemory.getRight();
+        lastPlacedBlock = clientTempMemory.getMiddle();
+      }
+      clientTempMemory = null;
+    }
+    if (lastPlacedBox != null && lastPlacedBlock != null && !world.isClient) {
+      for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
+        final BlockState existingState = world.getBlockState(posToRemove);
+        if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+          // 非管理员不应该破坏管理方块。
+          if (fluidIncluded) {
+            world.setBlockState(posToRemove, Blocks.AIR.getDefaultState());
+          } else {
+            world.removeBlock(posToRemove, false);
+          }
+        }
+      }
+      return ActionResult.SUCCESS;
+    }
+    return ActionResult.PASS;
+  }
+   
     public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, MatrixStack matrices, VertexConsumerProvider consumers, BlockPos pos, VoxelShape shape) {
         // your render logic
         return true;
