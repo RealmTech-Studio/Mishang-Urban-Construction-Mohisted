@@ -50,7 +50,7 @@ public class ColumnBuildingTool extends Item {
     }
     final Direction side = blockHitResult.getSide();
     final BlockPos originBlockPos = blockHitResult.getBlockPos();
-    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, originBlockPos, player, stack, blockHitResult, fluidIncluded);
+   // final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, originBlockPos, player, stack, blockHitResult, fluidIncluded);
     final int length = this.getLength(stack);
     boolean soundPlayed = false;
     final BlockPos.Mutable posToPlace = new BlockPos.Mutable().set(blockPlacementContext.posToPlace);
@@ -58,32 +58,26 @@ public class ColumnBuildingTool extends Item {
       for (int i = 0; i < length; i++) {
         if (world.getBlockState(posToPlace).canReplace(blockPlacementContext.placementContext)) {
           if (!world.isClient) {
-            world.setBlockState(posToPlace, blockPlacementContext.stateToPlace, 0b1011);
+           // world.setBlockState(posToPlace, blockPlacementContext.stateToPlace, 0b1011);
             BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
             if (blockPlacementContext.stackInHand != null) {
-              BlockItem.writeNbtToBlockEntity(world, player, posToPlace, blockPlacementContext.stackInHand);
+             // BlockItem.writeNbtToBlockEntity(world, player, posToPlace, blockPlacementContext.stackInHand);
             } else if (blockPlacementContext.hitEntity != null && entityToPlace != null) {
               entityToPlace.readNbt(blockPlacementContext.hitEntity.createNbt());
               entityToPlace.markDirty();
               world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
             }
           }
-          if (!soundPlayed) blockPlacementContext.playSound();
+          /*if (!soundPlayed) blockPlacementContext.playSound();
           soundPlayed = true;
         } else {
           posToPlace.move(side, -1);
           break;
-        }
+        }*/
         posToPlace.move(side);
       } // end for
     }
-    if (soundPlayed) {
-      if (!world.isClient) {
-        tempMemory.put(((ServerPlayerEntity) player), Triple.of(((ServerWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable())));
-      } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-        clientTempMemory = Triple.of(((ClientWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable()));
-      }
-    }
+   
     return ActionResult.SUCCESS;
   }
 
