@@ -50,12 +50,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
-@EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-public class ForcePlacingToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, ItemResourceGenerator {
 
-  public ForcePlacingToolItem(Settings settings, @Nullable Boolean includesFluid) {
-    super(settings, includesFluid);
-  }
 
   @Override
   public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
