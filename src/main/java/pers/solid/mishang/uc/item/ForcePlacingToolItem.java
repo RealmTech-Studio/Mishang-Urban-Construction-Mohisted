@@ -1,4 +1,6 @@
 package pers.solid.mishang.uc.item;
+import net.minecraft.item.TooltipContext;
+import net.minecraft.model.ModelJsonBuilder;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
