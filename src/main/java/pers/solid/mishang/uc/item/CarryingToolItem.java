@@ -51,9 +51,9 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-public class ForcePlacingToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, ItemResourceGenerator {
+public class CarryingToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, ItemResourceGenerator {
 
-  public ForcePlacingToolItem(Settings settings, @Nullable Boolean includesFluid) {
+  public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
@@ -180,4 +180,4 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
     }
   }
-
+}
