@@ -9,10 +9,3 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 
-@Mixin(WorldChunk.class)
-public class WorldChunkMixin {
-  @WrapWithCondition(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;onBlockAdded(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Z)V"))
-  public boolean wrappedCallOnBlockAdded(BlockState instance, World world, BlockPos pos, BlockState state, boolean notify) {
-    return NULL;
-  }
-}
