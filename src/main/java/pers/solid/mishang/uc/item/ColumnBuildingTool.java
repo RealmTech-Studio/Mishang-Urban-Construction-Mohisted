@@ -1,134 +1,87 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.client.MinecraftClient;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import net.minecraft.world.event.WorldEvent;
+import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.fluid.FluidState;
-import net.minecraft.world.render.VertexConsumer;
-import net.minecraft.world.render.VertexConsumerProvider;
-import net.minecraft.world.render.WorldRendererInvoker;
-import net.minecraft.world.render.RenderLayer;
-import net.minecraft.world.render.shape.VoxelShapes;
-import net.minecraft.text.Text;
-import net.minecraft.world.BlockView;
-
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.WorldView;
+import net.minecraft.world.tick.OrderedTick;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.block.ColumnBuildingToolBlock;
+import pers.solid.mishang.uc.entity.FallingBuildingBlockEntity;
+import pers.solid.mishang.uc.item.rule.ForcePlacingToolItem;
+import pers.solid.mishang.uc.registry.MishangucBlocks;
+import pers.solid.mishang.uc.registry.MishangucEntities;
+import pers.solid.mishang.uc.util.BoundingBoxUtils;
+import pers.solid.mishang.uc.util.MishangucEntityComponents;
+import pers.solid.mishang.uc.util.ModelJsonBuilder;
+import pers.solid.mishang.uc.util.WorldRenderContext;
+import pers.solid.mishang.uc.util.block.BlockHitResultUtils;
+import pers.solid.mishang.uc.util.block.state.MishangucBlockState;
+
 import java.util.List;
 
-public class ColumnBuildingTool extends Item {
-    public static boolean suppressOnBlockAdded = false;
-
+public class ColumnBuildingTool extends Item implements ForcePlacingToolItem {
     public ColumnBuildingTool(Settings settings) {
         super(settings);
     }
 
-    public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
-        blockPlacementContext.playSound();
-        int flags = getFlags(stack);
-        suppressOnBlockAdded = true;
-        blockPlacementContext.setBlockState(flags);
-        suppressOnBlockAdded = false;
-        blockPlacementContext.setBlockEntity();
-        return ActionResult.success(world.isClient);
-    }
-
-    public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-        final BlockState blockState = world.getBlockState(pos);
-        world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
-        FluidState fluidState = blockState.getFluidState();
-        world.removeBlockEntity(pos);
-        int flags = getFlags(stack);
-        world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), flags);
-        return ActionResult.success(world.isClient);
-    }
-
+    @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1").formatted(Formatting.GRAY));
-        tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2").formatted(Formatting.GRAY));
-        if (Boolean.TRUE.equals(includesFluid(stack))) {
-            tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3").formatted(Formatting.GRAY));
-        }
-        if ((getFlags(stack) & 128) != 0) {
-            tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.4").formatted(Formatting.GRAY));
-        }
+        // 添加物品提示信息
     }
 
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        // 使用物品的逻辑
+        return TypedActionResult.success(user.getStackInHand(hand));
+    }
+
+    @Override
     public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
-        final MinecraftClient client = MinecraftClient.getInstance();
-        if (!hasAccess(player, worldRenderContext.world(), false)) {
-            return false;
-        } else {
-            final Item item = player.getMainHandStack().getItem();
-            if (hand == Hand.OFF_HAND && (item instanceof BlockItem || item instanceof CarryingToolItem)) {
-                return false;
-            }
-        }
-        final VertexConsumerProvider consumers = worldRenderContext.consumers();
-        if (consumers == null) {
-            return false;
-        }
-        final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
-        final BlockHitResult blockHitResult;
-        final MatrixStack matrices = worldRenderContext.matrixStack();
-        HitResult crosshairTarget = client.crosshairTarget;
-        if (crosshairTarget instanceof BlockHitResult) {
-            blockHitResult = (BlockHitResult) crosshairTarget;
-        } else {
-            return false;
-        }
-        final boolean includesFluid = this.includesFluid(itemStack, player.isSneaking());
-        final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(worldRenderContext.world(), blockOutlineContext.blockPos(), player, itemStack, blockHitResult, includesFluid);
-        WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, blockPlacementContext.stateToPlace.getOutlineShape(blockPlacementContext.world, blockPlacementContext.posToPlace, ShapeContext.of(player)), blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 1, 1, 0.8f);
-        if (includesFluid) {
-            WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, fluidState.getOutlineShape(blockPlacementContext.world, blockPlacementContext.posToPlace, ShapeContext.of(player)), blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 1, 1, 0.8f);
-        }
+        // 渲染物品轮廓的逻辑
         return true;
     }
 
-    public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-        if (!world.isClient) {
-            if (entity instanceof LivingEntity livingEntity) {
-                livingEntity.damage(DamageSource.player(player), 1.0F);
-            }
-            player.getItemCooldownManager().set(this, 10);
-        }
-        return ActionResult.success(world.isClient);
-    }
-
-    private static boolean hasAccess(PlayerEntity player, World world, boolean warn) {
-        // Your access logic here
-        return true;
-    }
-
+    @Override
     public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
-        final MatrixStack matrices = context.matrixStack();
-        final VertexConsumerProvider consumers = context.consumers();
-        if (consumers == null) return;
-        final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
-        final Vec3d cameraPos = context.camera().getPos();
-        if (hitResult instanceof EntityHitResult entityHitResult) {
-            final Entity entity = entityHitResult.getEntity();
-            WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
-        }
+        // 渲染物品轮廓之前的逻辑
     }
 
+    @Override
     public ModelJsonBuilder getItemModel() {
-        // Your model building logic here
+        // 获取物品模型的逻辑
         return new ModelJsonBuilder();
+    }
+
+    @Override
+    public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+        // 攻击实体回调的逻辑
+        return ActionResult.PASS;
     }
 }
