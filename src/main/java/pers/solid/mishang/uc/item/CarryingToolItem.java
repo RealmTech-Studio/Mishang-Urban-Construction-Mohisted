@@ -42,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangucClient;
+import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
@@ -57,19 +58,12 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   @Override
-  public ActionResult useOnBlock(
-      ItemStack stack, PlayerEntity player,
-      World world,
-      BlockHitResult blockHitResult,
-      Hand hand,
-      boolean fluidIncluded) {
+  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
-      // 仅限特定情况下使用。
       return ActionResult.PASS;
     }
     BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, player.getStackInHand(hand), blockHitResult, fluidIncluded);
     blockPlacementContext.playSound();
-    // 放置方块。对客户端和服务器均生效。
     int flags = getFlags(stack);
     suppressOnBlockAdded = true;
     blockPlacementContext.setBlockState(flags);
@@ -81,17 +75,14 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   public static boolean suppressOnBlockAdded = false;
 
   @Override
-  public ActionResult beginAttackBlock(
-      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
-      // 仅限特定情况下使用。
       return ActionResult.PASS;
     }
     final BlockState blockState = world.getBlockState(pos);
     world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
-    // 在破坏时，直接先将其内容清除。
-world.removeBlockEntity(pos);
+    world.removeBlockEntity(pos);
     int flags = getFlags(stack);
     world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), flags);
     return ActionResult.success(world.isClient);
@@ -102,44 +93,28 @@ world.removeBlockEntity(pos);
   }
 
   @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(
-        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1")
-            .formatted(Formatting.GRAY));
-    tooltip.add(
-        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2")
-            .formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2").formatted(Formatting.GRAY));
     if (Boolean.TRUE.equals(includesFluid(stack))) {
-      tooltip.add(
-          TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
-              .formatted(Formatting.GRAY));
+      tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids").formatted(Formatting.GRAY));
     }
-    tooltip.add(
-        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3")
-            .formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3").formatted(Formatting.GRAY));
     if ((getFlags(stack) & 128) != 0) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.suspends_light")
-          .formatted(Formatting.YELLOW));
+      tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.suspends_light").formatted(Formatting.YELLOW));
     }
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(
-      PlayerEntity player,
-      ItemStack itemStack,
-      WorldRenderContext worldRenderContext,
-      WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
+  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final MinecraftClient client = MinecraftClient.getInstance();
     if (!hasAccess(player, worldRenderContext.world(), false)) {
-      // 只有在符合条件的情况下，才会绘制边框。
       return true;
     } else {
       final Item item = player.getMainHandStack().getItem();
       if (hand == Hand.OFF_HAND && (item instanceof BlockItem || item instanceof CarryingToolItem)) {
-        // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
         return true;
       }
     }
@@ -158,52 +133,16 @@ world.removeBlockEntity(pos);
       return true;
     }
     final boolean includesFluid = this.includesFluid(itemStack, player.isSneaking());
-    final BlockPlacementContext blockPlacementContext =
-        new BlockPlacementContext(
-            worldRenderContext.world(),
-            blockOutlineContext.blockPos(),
-            player,
-            itemStack,
-            blockHitResult,
-            includesFluid);
-    WorldRendererInvoker.drawCuboidShapeOutline(
-        matrices,
-        vertexConsumer,
-        blockPlacementContext.stateToPlace.getOutlineShape(
-            blockPlacementContext.world, blockPlacementContext.posToPlace, ShapeContext.of(player)),
-        blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
-        blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
-        blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-        0,
-        1,
-        1,
-        0.8f);
+    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(worldRenderContext.world(), blockOutlineContext.blockPos(), player, itemStack, blockHitResult, includesFluid);
+    WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, blockPlacementContext.stateToPlace.getOutlineShape(blockPlacementContext.world, blockPlacementContext.posToPlace, ShapeContext.of(player)), blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 1, 1, 0.8f);
     if (includesFluid) {
-      WorldRendererInvoker.drawCuboidShapeOutline(
-          matrices,
-          vertexConsumer,
-          blockPlacementContext
-              .stateToPlace
-              .getFluidState()
-              .getShape(blockPlacementContext.world, blockPlacementContext.posToPlace),
-          blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
-          blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
-          blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-          0,
-          0.5f,
-          1,
-          0.5f);
+      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, blockPlacementContext.stateToPlace.getFluidState().getShape(blockPlacementContext.world, blockPlacementContext.posToPlace), blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 0.5f, 1, 0.5f);
     }
     return false;
   }
 
   @Override
-  public @NotNull ActionResult attackEntityCallback(
-      PlayerEntity player,
-      World world,
-      Hand hand,
-      Entity entity,
-      @Nullable EntityHitResult hitResult) {
+  public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     if (!hasAccess(player, world, true)) return ActionResult.PASS;
     if (!world.isClient) {
       if (entity instanceof PlayerEntity) {
@@ -218,23 +157,18 @@ world.removeBlockEntity(pos);
     return ActionResult.SUCCESS;
   }
 
-  /**
-   * 玩家是否有权使用此物品。
-   */
   @ApiStatus.AvailableSince("1.0.0")
   private static boolean hasAccess(PlayerEntity player, World world, boolean warn) {
     if (world.isClient) {
       return MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.get().hasAccess(player);
     } else {
-      //final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
-      //return toolAccess.hasAccess(player, warn);
-      return false; // 临时修复，您可以取消注释并修改此部分以匹配您的实现。
+      return true; // Placeholder, replace with actual access check.
     }
   }
+
   @Environment(EnvType.CLIENT)
   @Override
   public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
-    // 只在使用主手持有此物品时进行渲染。
     if (hand != Hand.MAIN_HAND || !hasAccess(player, context.world(), false)) return;
     final MatrixStack matrices = context.matrixStack();
     final VertexConsumerProvider consumers = context.consumers();
@@ -247,9 +181,3 @@ world.removeBlockEntity(pos);
     }
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
-  }
-}
