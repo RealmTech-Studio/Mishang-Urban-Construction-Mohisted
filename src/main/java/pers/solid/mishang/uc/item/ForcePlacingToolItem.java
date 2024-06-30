@@ -1,4 +1,4 @@
-package pers.solid.mishang.uc.item;
+/*package pers.solid.mishang.uc.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -226,6 +226,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     /**
      * 玩家是否有权使用此物品。
      */
+*/
+/*
     @ApiStatus.AvailableSince("1.0.0")
     private static boolean hasAccess(PlayerEntity player, World world, boolean placing) {
         if (player.isCreative()) {
@@ -256,3 +258,4 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         // 无需为此物品生成模型。
     }
 }
+*/
