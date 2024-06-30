@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.item.CarryingToolItem;
+//import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.mixin.BucketItemAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
@@ -163,7 +163,7 @@ public class BlockPlacementContext {
         stackInHand1 = stackInHand0;
         hand = hand1;
         break;
-      } else if (stackInHand0.getItem() instanceof CarryingToolItem) {
+      } else if (stackInHand0.getItem() instanceof NULL) {
         placementContext1 = new ItemPlacementContext(player, hand1, stackInHand0, hit);
         //stateToPlace1 = CarryingToolItem.getHoldingBlockState(stackInHand0, world);
         stackInHand1 = stackInHand0;
