@@ -8,7 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
-import pers.solid.mishang.uc.MishangucClient;
+
 
 /**
  * 物品实现此接口后，玩家拿着物品时就会调用 {@link #renderBlockOutline}。{@link #RENDERER} 是个匿名的 {@link
