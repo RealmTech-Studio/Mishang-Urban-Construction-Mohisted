@@ -52,7 +52,7 @@ public final class MishangucItems {
 
   public static final OmnipotentToolItem OMNIPOTENT_TOOL = new OmnipotentToolItem(new FabricItemSettings().fireproof().rarity(Rarity.EPIC).maxCount(1));
 
-  public static final ExplosionToolItem EXPLOSION_TOOL = new ExplosionToolItem(new FabricItemSettings().maxDamage(1024));
+ 
 
   @ApiStatus.AvailableSince("0.2.1")
   public static final ColorToolItem COLOR_TOOL = new ColorToolItem(new FabricItemSettings().maxDamage(1024), null);
