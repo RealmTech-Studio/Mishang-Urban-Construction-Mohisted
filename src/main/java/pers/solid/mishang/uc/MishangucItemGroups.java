@@ -13,7 +13,6 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.ObjectUtils;
 import pers.solid.mishang.uc.blocks.*;
-import pers.solid.mishang.uc.item.ExplosionToolItem;
 import pers.solid.mishang.uc.item.FastBuildingToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
@@ -44,9 +43,7 @@ public class MishangucItemGroups {
       }).displayName(Text.translatable("itemGroup.mishanguc.signs")).build());
   public static final ItemGroup TOOLS = Registry.register(Registries.ITEM_GROUP, new Identifier("mishanguc", "tools"),
       FabricItemGroup.builder().icon(() -> new ItemStack(MishangucItems.ROTATING_TOOL)).entries((displayContext, entries) -> MishangUtils.instanceStream(MishangucItems.class, ItemConvertible.class).forEach(item -> {
-        if (item instanceof final ExplosionToolItem explosionToolItem) {
-          explosionToolItem.appendToEntries(entries);
-        } else if (item instanceof final FastBuildingToolItem fastBuildingToolItem) {
+       if (item instanceof final FastBuildingToolItem fastBuildingToolItem) {
           fastBuildingToolItem.appendToEntries(entries);
         } else {
           entries.add(item);
