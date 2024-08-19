@@ -1,5 +1,5 @@
 # 给访问地区来自中国大陆的人
-请转到[以下文件](README.md).查看中文简介
+请转到[本文件](README.md).查看中文简介
 
 # Description of this repository
 
