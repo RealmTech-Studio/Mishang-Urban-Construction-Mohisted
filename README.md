@@ -1,4 +1,12 @@
-it add # 迷上城建模组
+# For Foreigners
+
+For English version of the description, see [this file](README-en.md).
+
+# 本仓库的相关说明
+
+本分支是为了解决在Mohist上迷上城建使用信雅互联导致的Gamerule注入错误而产生的，此外，我们还移除了爆炸工具这些可以轻松炸服的工具，本仓库遵循原仓库要求开源。
+
+# 迷上城建模组（此为原仓库README）
 
 迷上城建（Mishang Urban Construction）是一个建筑与装饰类的模组，提供了一系列有用的方块，例如：
 
@@ -30,5 +38,3 @@ it add # 迷上城建模组
 本模组是按照 LGPLv3 协议发布的，传播本模组时须遵守本协议。
 
 欢迎加入QQ群 **587928350** 进行交流。你也可以在 GitHub 中报告问题。
-
-For English version of the description, see [this file](README-en.md).
