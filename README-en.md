@@ -1,4 +1,11 @@
-# Mishang Urban Construction
+# 给访问地区来自中国大陆的人
+请转到[以下文件](README.md).查看中文简介
+
+# Description of this repository
+
+This branch was created to solve the Gamerule injection error caused by using Xinya Interconnect in Mohist. In addition, we have also removed the explosion tools that can easily crash the server. This repository follows the requirements of the original repository to be open source.
+
+# Mishang Urban Construction (This is the original repository README)
 
 Mishang Urban Construction is a mod related to building and decorations, which provides an array of useful blocks, including:
 
