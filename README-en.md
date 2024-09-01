@@ -3,7 +3,7 @@
 
 # Description of this repository
 
-This branch was created to solve the Gamerule injection error caused by using Xinya Interconnect in Mohist. In addition, we have also removed the explosion tools that can easily crash the server. This repository follows the requirements of the original repository to be open source.
+This branch was created to solve the Gamerule injection error caused by using Sinytra Connector in Mohist. In addition, we have also removed the explosion tools that can easily crash the server. This repository follows the requirements of the original repository to be open source.
 
 # Mishang Urban Construction (This is the original repository README)
 
